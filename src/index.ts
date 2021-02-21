@@ -51,12 +51,14 @@ function init() {
   orbitControls.enableDamping = true;
 
   // PLANE
-  const waterGeometry = new THREE.PlaneGeometry(2, 2, 128, 128);
+  const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512);
   const waterMaterial = new THREE.ShaderMaterial({
     vertexShader: waterVertexShader,
     fragmentShader: waterFragmentShader,
     uniforms: {
-      uTime: { value: 0.0 }
+      uTime: { value: 0.0 },
+      uSurfaceColour: { value: new THREE.Color("#e6efff") },
+      uDepthColour: { value: new THREE.Color("#1a3663") },
     }
   });
   const water = new THREE.Mesh(waterGeometry, waterMaterial);
