@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import waterVertexShader from "./shaders/vertex.glsl";
+import waterFragmentShader from "./shaders/fragment.glsl";
 
 import "./style.css";
 
@@ -30,14 +32,14 @@ function init() {
   const aspectRatio = window.innerWidth / window.innerHeight;
   const fieldOfView = 60;
   const nearPlane = 0.1;
-  const farPlane = 1000;
+  const farPlane = 100;
   const camera = new THREE.PerspectiveCamera(
     fieldOfView,
     aspectRatio,
     nearPlane,
     farPlane
   );
-  camera.position.z = 2;
+  camera.position.set(1, 1, 1);
 
   // RENDERER
   const canvas = document.querySelector<HTMLCanvasElement>("#c");
@@ -48,18 +50,26 @@ function init() {
   const orbitControls = new OrbitControls(camera, renderer.domElement);
   orbitControls.enableDamping = true;
 
-  // CUBE
-  const geometry = new THREE.BoxGeometry();
-  const material = new THREE.MeshNormalMaterial();
-  const cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
+  // PLANE
+  const waterGeometry = new THREE.PlaneGeometry(2, 2, 128, 128);
+  const waterMaterial = new THREE.ShaderMaterial({
+    vertexShader: waterVertexShader,
+    fragmentShader: waterFragmentShader,
+    uniforms: {
+      uTime: { value: 0.0 }
+    }
+  });
+  const water = new THREE.Mesh(waterGeometry, waterMaterial);
+  water.rotation.x = -Math.PI * 0.5;
+  scene.add(water);
 
+  const clock = new THREE.Clock();
   const animate = () => {
     requestAnimationFrame(animate);
 
+    const elapsedTime = clock.getElapsedTime();
+    water.material.uniforms.uTime.value = elapsedTime;
     orbitControls.update();
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
   };
