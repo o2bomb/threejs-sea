@@ -1,7 +1,7 @@
 {
-  "name": "threejs-template",
+  "name": "threejs-sea",
   "version": "1.0.0",
-  "description": "three.js w/ TypeScript Template",
+  "description": "A raging sea created with Three.js",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
